@@ -15,7 +15,7 @@ def load_items(filename):    #读取商品及下标对应数据
     for line in df.readlines():
         line=line.strip().split('\t')
         items[int(line[0])]=line[1]      #此处商品下标对应字典中 需要将键值从字符串形式转换为整形，以便后续找对应产品时键值数据类型一致
- #       items_reverse(line[1])=int(line[0])
+        items_reverse[line[1]]=int(line[0])
     df.close()
     return items,items_reverse
     
@@ -70,14 +70,14 @@ class Recommender():   #推荐函数类     类型命名切记下划线使用
             max_similarity_user=[]   #最大相似性的用户列表，个数基于reco_numble而定
             for item in user_visit:
                 if isinstance(item,str):
-                    if item not in self.items:
+                    if item not in self.items_reverse:
                         continue         #如果用户访问记录中产品不存在于历史训练字典中 则自动过滤
                     row.append(0);
                     col.append(int(self.items_reverse[item]))  #讲访问产品对应下标列置为1  代表访问
                     data.append(1)
                     user_visit_dict[item]=1
                 elif isinstance(item,int):
-                    if item not in self.items_reverse:
+                    if item not in self.items:
                         continue         #如果用户访问记录中产品不存在于历史训练字典中 则自动过滤
                     row.append(0);
                     col.append(item)  #讲访问产品对应下标列置为1  代表访问
